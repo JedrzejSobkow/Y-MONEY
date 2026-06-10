@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http.response import JsonResponse
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Case, When, Value, CharField
 from .forms import TransactionForm, TransactionItemForm
 from .models import TransactionItem, Transaction
 from apps.users.models import Profile
@@ -242,7 +242,13 @@ class TransactionListView(LoginRequiredMixin, View):
         profile = Profile.objects.get(user=request.user)
         wallet = get_object_or_404(Wallet, id=wallet_id, owner=profile)
 
-        transactions = wallet.transactions.prefetch_related("items")
+        transactions = Transaction.objects.filter(
+            Q(wallet=wallet) | Q(recipient_wallet=wallet)
+        ).select_related(
+            'wallet', 
+            'recipient_wallet', 
+            'recipient_friend'
+        ).prefetch_related("items")
 
         type_filter = request.GET.get("type")
         if type_filter in Transaction.TransactionType.values:
@@ -254,7 +260,16 @@ class TransactionListView(LoginRequiredMixin, View):
             transactions = transactions.filter(transaction_date__date__gte=date_from)
         if date_to:
             transactions = transactions.filter(transaction_date__date__lte=date_to)
-
+        
+        transactions = transactions.annotate(
+            direction=Case(
+                When(wallet=wallet, then=Value('outgoing')),
+                When(recipient_wallet=wallet, then=Value('incoming')),
+                default=Value('unknown'),
+                output_field=CharField(),
+            )
+        )
+        
         return render(request, "transactions/transaction_list.html", {
             "wallet": wallet,
             "transactions": transactions,
