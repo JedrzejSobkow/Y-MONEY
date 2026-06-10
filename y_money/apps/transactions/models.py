@@ -44,6 +44,10 @@ class Transaction(TimeStampedModel):
     def amount(self):
         return self.items.aggregate(total=models.Sum("amount"))["total"] or Decimal("0.00")
     
+    @property
+    def absolute_amount(self):
+        return abs(self.amount)
+    
     class Meta:
         indexes = [
             models.Index(fields=["wallet", "transaction_date"])

@@ -99,6 +99,7 @@
               <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start">
                   <div>
+                    <span class="fw-bold">{{ t.title }}</span>
                     <div class="d-flex align-items-center gap-2 mb-1">
                       {% if t.type == "income" %}
                         <span class="badge bg-success">Wpływ</span>
@@ -106,8 +107,18 @@
                         <span class="badge bg-danger">Wydatek</span>
                       {% else %}
                         <span class="badge bg-primary">Przelew</span>
+                        {% if t.direction == 'incoming' %}
+                          <span class="badge bg-info">Przychodzący</span>
+                        {% else %}
+                          <span class="badge bg-secondary">Wychodzący</span>
+                        {% endif %}
+
+                        {% if t.transfer_mode == 'internal' %}
+                          <span class="badge bg-warning text-dark">Wewnętrzny</span>
+                        {% elif t.transfer_mode == 'external' %}
+                          <span class="badge bg-info text-dark">Zewnętrzny</span>
+                        {% endif %}
                       {% endif %}
-                      <span class="fw-bold">{{ t.title }}</span>
                     </div>
                     <div class="text-muted small">
                       {{ t.transaction_date|date:"d.m.Y H:i" }}
@@ -115,11 +126,62 @@
                     {% if t.description %}
                       <div class="text-muted small mt-1">{{ t.description }}</div>
                     {% endif %}
+                    {% if t.type == "transfer" %}
+                      {% if t.direction == 'incoming' %}
+                        <div class="text-muted small mt-1">
+                          <i class="bi bi-arrow-right"></i> 
+                          Od: 
+                          {% if t.transfer_mode == 'internal' %}
+                            {{ t.wallet.name }}
+                          {% else %}
+                            {{ t.wallet.owner.user.get_full_name|default:t.wallet.owner.user.username }}
+                          {% endif %}
+                        </div>
+                      {% elif t.direction == 'outgoing' %}
+                        <div class="text-muted small mt-1">
+                          <i class="bi bi-arrow-left"></i> 
+                          Do: 
+                          {% if t.transfer_mode == 'internal' %}
+                            {{ t.recipient_wallet.name }}
+                          {% elif t.transfer_mode == 'external' %}
+                            {{ t.recipient_friend.user.get_full_name|default:t.recipient_friend.user.username }}
+                          {% else %}
+                            {% if t.recipient_wallet %}
+                              {{ t.recipient_wallet.name }}
+                            {% elif t.recipient_friend %}
+                              {{ t.recipient_friend.user.get_full_name|default:t.recipient_friend.user.username }}
+                            {% endif %}
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    {% endif %}
                   </div>
                   <div class="text-end ms-3">
-                    <div class="fs-5 fw-bold {% if t.amount >= 0 %}text-success{% else %}text-danger{% endif %}">
-                      {% if t.amount >= 0 %}+{% endif %}{{ t.amount }} {{ wallet.currency|upper }}
+                    <div class="fs-5 fw-bold 
+                      {% if t.type == 'income' %}
+                        text-success
+                      {% elif t.type == 'expense' %}
+                        text-danger
+                      {% elif t.type == 'transfer' and t.direction == 'incoming' %}
+                        text-success
+                      {% elif t.type == 'transfer' and t.direction == 'outgoing' %}
+                        text-danger
+                      {% endif %}">
+                      {% if t.type == 'income' %}
+                        +{{ t.amount }} {{ wallet.currency|upper }}
+                      {% elif t.type == 'expense' %}
+                        {{ t.amount }} {{ wallet.currency|upper }}
+                      {% elif t.type == 'transfer' %}
+                        {% if t.direction == 'incoming' %}
+                          +{{ t.absolute_amount }} {{ wallet.currency|upper }}
+                        {% else %}
+                          {{ t.amount }} {{ wallet.currency|upper }}
+                        {% endif %}
+                      {% endif %}
                     </div>
+                    {% if t.type == 'transfer' and t.direction == 'incoming' %}
+                      <div class="text-muted small">(przychodzący)</div>
+                    {% endif %}
                   </div>
                 </div>
               </div>

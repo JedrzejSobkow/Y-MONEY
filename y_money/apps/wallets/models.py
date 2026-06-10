@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q, Sum, Case, When, F, DecimalField
 from apps.core.models import TimeStampedModel
 from apps.users.models import Profile
 from decimal import Decimal
@@ -32,7 +33,24 @@ class Wallet(TimeStampedModel):
     # TODO VERIFY IF INCOME OR OUTCOME
     @property
     def balance(self):
-        return self.transactions.aggregate(total=models.Sum('items__amount'))['total'] or Decimal("0.00")
+        from apps.transactions.models import Transaction
+        
+        result = Transaction.objects.filter(
+            Q(wallet=self) | Q(recipient_wallet=self)
+        ).aggregate(
+            total=Sum(
+                Case(
+                    When(
+                        recipient_wallet=self,
+                        then=F('items__amount') * (-1)
+                    ),
+                    default=F('items__amount'),
+                    output_field=DecimalField(max_digits=12, decimal_places=2)
+                )
+            )
+        )['total'] or Decimal('0.00')
+        
+        return result
 
     class Meta:
         constraints = [
