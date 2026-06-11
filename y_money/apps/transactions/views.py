@@ -199,7 +199,7 @@ class TransactionCreateView(LoginRequiredMixin, View):
 
             if transaction_type in ["expense", "transfer"] and total > 0:
                 message = (
-                    "Łączna kwota przelewu musi być niedodatnia."
+                    "Łączna kwota transferu musi być niedodatnia."
                     if transaction_type == "transfer"
                     else "Łączna kwota wydatku musi być niedodatnia."
                 )
