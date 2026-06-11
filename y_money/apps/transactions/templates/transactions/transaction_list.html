@@ -129,27 +129,29 @@
                     {% if t.type == "transfer" %}
                       {% if t.direction == 'incoming' %}
                         <div class="text-muted small mt-1">
-                          <i class="bi bi-arrow-right"></i> 
-                          Od: 
                           {% if t.transfer_mode == 'internal' %}
-                            {{ t.wallet.name }}
+                            <i class="bi bi-wallet2"></i>
+                            Z portfela: {{ t.wallet.name }}
                           {% else %}
-                            {{ t.wallet.owner.user.get_full_name|default:t.wallet.owner.user.username }}
+                            <i class="bi bi-person"></i>
+                            Od: {{ t.wallet.owner.user.get_full_name|default:t.wallet.owner.user.username }}
                           {% endif %}
                         </div>
                       {% elif t.direction == 'outgoing' %}
                         <div class="text-muted small mt-1">
-                          <i class="bi bi-arrow-left"></i> 
-                          Do: 
                           {% if t.transfer_mode == 'internal' %}
-                            {{ t.recipient_wallet.name }}
+                            <i class="bi bi-wallet2"></i>
+                            Do portfela: {{ t.recipient_wallet.name }}
                           {% elif t.transfer_mode == 'external' %}
-                            {{ t.recipient_friend.user.get_full_name|default:t.recipient_friend.user.username }}
+                            <i class="bi bi-person"></i>
+                            Do: {{ t.recipient_friend.user.get_full_name|default:t.recipient_friend.user.username }}
                           {% else %}
                             {% if t.recipient_wallet %}
-                              {{ t.recipient_wallet.name }}
+                              <i class="bi bi-wallet2"></i>
+                              Do portfela: {{ t.recipient_wallet.name }}
                             {% elif t.recipient_friend %}
-                              {{ t.recipient_friend.user.get_full_name|default:t.recipient_friend.user.username }}
+                              <i class="bi bi-person"></i>
+                              Do: {{ t.recipient_friend.user.get_full_name|default:t.recipient_friend.user.username }}
                             {% endif %}
                           {% endif %}
                         </div>
