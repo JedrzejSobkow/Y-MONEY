@@ -279,7 +279,8 @@ class TransactionListView(LoginRequiredMixin, View):
             "counts": transactions.aggregate(
                 income=Count("id", filter=Q(type="income")),
                 expense=Count("id", filter=Q(type="expense")),
-                transfer=Count("id", filter=Q(type="transfer")),
+                transfer_incoming=Count("id", filter=Q(type="transfer", direction="incoming")),
+                transfer_outgoing=Count("id", filter=Q(type="transfer", direction="outgoing")),
             ),
         })
         

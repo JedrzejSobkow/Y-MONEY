@@ -50,6 +50,22 @@
             line-height: 1.5;
         }
 
+        .transfer-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          border-width: 1px;
+          border-style: solid;
+        }
+
+        .transfer-badge-incoming {
+          border-color: #198754;
+        }
+
+        .transfer-badge-outgoing {
+          border-color: #dc3545;
+        }
+
         .card.clickable-card {
           cursor: pointer;
           background-color: #fff;
@@ -106,11 +122,10 @@
                       {% elif t.type == "expense" %}
                         <span class="badge bg-danger">Wydatek</span>
                       {% else %}
-                        <span class="badge bg-primary">Transfer</span>
                         {% if t.direction == 'incoming' %}
-                          <span class="badge bg-info">Przychodzący</span>
+                          <span class="badge bg-primary transfer-badge transfer-badge-incoming">Transfer przychodzący</span>
                         {% else %}
-                          <span class="badge bg-secondary">Wychodzący</span>
+                          <span class="badge bg-primary transfer-badge transfer-badge-outgoing">Transfer wychodzący</span>
                         {% endif %}
 
                         {% if t.transfer_mode == 'internal' %}
@@ -203,7 +218,11 @@
                 </div>
                 <div class="col-4">
                 <div class="text-muted small">Transfery</div>
-                <div class="fw-bold text-primary">{{ counts.transfer }}</div>
+                <div class="fw-bold d-flex justify-content-center align-items-center gap-2">
+                  <span class="text-success fw-semibold">{{ counts.transfer_incoming }}</span>
+                  <span class="text-muted">|</span>
+                  <span class="text-danger fw-semibold">{{ counts.transfer_outgoing }}</span>
+                </div>
                 </div>
             </div>
             </div>
