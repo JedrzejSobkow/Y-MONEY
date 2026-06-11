@@ -123,9 +123,6 @@
                     <div class="text-muted small">
                       {{ t.transaction_date|date:"d.m.Y H:i" }}
                     </div>
-                    {% if t.description %}
-                      <div class="text-muted small mt-1">{{ t.description }}</div>
-                    {% endif %}
                     {% if t.type == "transfer" %}
                       {% if t.direction == 'incoming' %}
                         <div class="text-muted small mt-1">
