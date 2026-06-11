@@ -51,6 +51,14 @@ class Wallet(TimeStampedModel):
         )['total'] or Decimal('0.00')
         
         return result
+    
+    @property
+    def all_transactions_count(self):
+        from apps.transactions.models import Transaction
+        
+        return Transaction.objects.filter(
+            Q(wallet=self) | Q(recipient_wallet=self)
+        ).count()
 
     class Meta:
         constraints = [

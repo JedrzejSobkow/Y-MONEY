@@ -37,7 +37,7 @@
               </div>
               <div class="col-4">
                 <div class="text-muted small">Wszystkich</div>
-                <div class="fs-4 fw-bold text-dark">{{ wallet.transactions.count }}</div>
+                <div class="fs-4 fw-bold text-dark">{{ wallet.all_transactions_count }}</div>
               </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
               <option value="">Wszystkie</option>
               <option value="income"  {% if type_filter == "income"  %}selected{% endif %}>Wpływ</option>
               <option value="expense" {% if type_filter == "expense" %}selected{% endif %}>Wydatek</option>
-              <option value="transfer"{% if type_filter == "transfer"%}selected{% endif %}>Przelew</option>
+              <option value="transfer"{% if type_filter == "transfer"%}selected{% endif %}>Transfer</option>
             </select>
           </div>
           <div class="col-12 col-md-3">
@@ -106,7 +106,7 @@
                       {% elif t.type == "expense" %}
                         <span class="badge bg-danger">Wydatek</span>
                       {% else %}
-                        <span class="badge bg-primary">Przelew</span>
+                        <span class="badge bg-primary">Transfer</span>
                         {% if t.direction == 'incoming' %}
                           <span class="badge bg-info">Przychodzący</span>
                         {% else %}
@@ -202,7 +202,7 @@
                 <div class="fw-bold text-danger">{{ counts.expense }}</div>
                 </div>
                 <div class="col-4">
-                <div class="text-muted small">Przelewy</div>
+                <div class="text-muted small">Transfery</div>
                 <div class="fw-bold text-primary">{{ counts.transfer }}</div>
                 </div>
             </div>
