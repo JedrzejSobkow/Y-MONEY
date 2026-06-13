@@ -294,9 +294,31 @@ class TransactionDetailView(LoginRequiredMixin, View):
                 "recipient_wallet",
                 "recipient_wallet__owner__user",
                 "recipient_friend__user",
-            ).prefetch_related("items"),
-            pk=pk,
-            wallet__owner=profile,
+            ).prefetch_related("items").filter(
+                Q(wallet__owner=profile) | Q(recipient_wallet__owner=profile),
+                pk=pk,
+            )
+        )
+
+        source_wallet_is_ours = transaction_obj.wallet.owner_id == profile.id
+        recipient_wallet_is_ours = (
+            transaction_obj.recipient_wallet is not None
+            and transaction_obj.recipient_wallet.owner_id == profile.id
+        )
+
+        transaction_obj.display_wallet_name = (
+            transaction_obj.wallet.name
+            if source_wallet_is_ours
+            else transaction_obj.recipient_wallet.name
+            if recipient_wallet_is_ours and transaction_obj.recipient_wallet is not None
+            else transaction_obj.wallet.name
+        )
+        transaction_obj.display_sender_wallet_name = (
+            transaction_obj.wallet.name if source_wallet_is_ours else None
+        )
+        transaction_obj.display_recipient_wallet_name = (
+            transaction_obj.recipient_wallet.name
+            if recipient_wallet_is_ours else None
         )
 
         return render(
