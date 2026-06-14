@@ -5,5 +5,5 @@ urlpatterns = [
     path("add/", TransactionCreateView.as_view(), name="add-transaction"),
     path("add/<int:wallet_id>", TransactionCreateView.as_view(), name="add-transaction-with-wallet"),
     path("wallet/<int:wallet_id>/", TransactionListView.as_view(), name="transaction-list"),
-    path("<int:pk>/", TransactionDetailView.as_view(), name="transaction-detail"),
+    path("<int:wallet_id>/<int:transaction_id>/", TransactionDetailView.as_view(), name="transaction-detail"),
 ]

@@ -285,7 +285,7 @@ class TransactionListView(LoginRequiredMixin, View):
         })
         
 class TransactionDetailView(LoginRequiredMixin, View):
-    def get(self, request, pk):
+    def get(self, request, wallet_id, transaction_id):
         profile = Profile.objects.get(user=request.user)
         transaction_obj = get_object_or_404(
             Transaction.objects.select_related(
@@ -296,7 +296,8 @@ class TransactionDetailView(LoginRequiredMixin, View):
                 "recipient_friend__user",
             ).prefetch_related("items").filter(
                 Q(wallet__owner=profile) | Q(recipient_wallet__owner=profile),
-                pk=pk,
+                Q(wallet__id=wallet_id) | Q(recipient_wallet__id=wallet_id),
+                pk=transaction_id,
             )
         )
 
@@ -307,11 +308,7 @@ class TransactionDetailView(LoginRequiredMixin, View):
         )
 
         transaction_obj.display_wallet_name = (
-            transaction_obj.wallet.name
-            if source_wallet_is_ours
-            else transaction_obj.recipient_wallet.name
-            if recipient_wallet_is_ours and transaction_obj.recipient_wallet is not None
-            else transaction_obj.wallet.name
+            Wallet.objects.get(id=wallet_id).name
         )
         transaction_obj.display_sender_wallet_name = (
             transaction_obj.wallet.name if source_wallet_is_ours else None
