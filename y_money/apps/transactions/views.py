@@ -228,6 +228,7 @@ class TransactionCreateView(LoginRequiredMixin, View):
                     "success": True,
                     "message": "Transakcja zapisana.",
                     "transaction_id": new_transaction.id,
+                    "wallet_id": new_transaction.wallet.id,
                 }, status=201)
             
         except Exception as e:

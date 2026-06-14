@@ -493,7 +493,7 @@
 
         let numericAmount = amount === '' ? null : parseFloat(amount)
 
-        if (type === 'expense' && numericAmount !== null) {
+        if ((type === 'expense' || type === 'transfer') && numericAmount !== null) {
           numericAmount = -numericAmount
         }
 
@@ -538,7 +538,7 @@
         })
         const data = await res.json()
         if (data.success) {
-          window.location.href = `/transactions/${data.transaction_id}/`
+          window.location.href = `/transactions/${data.wallet_id}/${data.transaction_id}/`
         } else {
           showErrors(data.errors)
         }
