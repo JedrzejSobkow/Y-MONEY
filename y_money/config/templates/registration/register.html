@@ -1,17 +1,154 @@
 {% extends "base.html" %}
 
+{% block title %}Rejestracja - Y-money{% endblock %}
+
 {% block content %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+      <div class="card shadow-sm border-0" style="border-radius: 12px;">
+        <div class="card-body p-4 p-md-5">
+          <div class="text-center mb-4">
+            <h2 class="fw-bold mb-1">Rejestracja</h2>
+            <p class="text-muted mb-0">Utwórz nowe konto Y-money</p>
+          </div>
 
-<h2>Registration page</h2>
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+              {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
 
-<form method="post">
-    {% csrf_token %}
+          <form method="post" novalidate>
+            {% csrf_token %}
 
-    {{ form.as_p }}
+            <div class="mb-3">
+              <label for="id_email" class="form-label fw-bold">Email</label>
+              <input
+                type="email"
+                name="email"
+                id="id_email"
+                class="form-control{% if form.email.errors %} is-invalid{% endif %}"
+                value="{{ form.email.value|default:'' }}"
+                autocomplete="email"
+                required
+              >
+              {% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.email.errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
 
-    <button type="submit">Register</button>
-</form>
+            <div class="mb-3">
+              <label for="id_username" class="form-label fw-bold">Nazwa użytkownika</label>
+              <input
+                type="text"
+                name="username"
+                id="id_username"
+                class="form-control{% if form.username.errors %} is-invalid{% endif %}"
+                value="{{ form.username.value|default:'' }}"
+                autocomplete="username"
+                required
+              >
+              {% if form.username.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.username.errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
 
-<a href="{% url 'login' %}"> Already have account? </a>
+            <div class="mb-3">
+              <label for="id_first_name" class="form-label fw-bold">Imię</label>
+              <input
+                type="text"
+                name="first_name"
+                id="id_first_name"
+                class="form-control{% if form.first_name.errors %} is-invalid{% endif %}"
+                value="{{ form.first_name.value|default:'' }}"
+              >
+              {% if form.first_name.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.first_name.errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
 
+            <div class="mb-3">
+              <label for="id_last_name" class="form-label fw-bold">Nazwisko</label>
+              <input
+                type="text"
+                name="last_name"
+                id="id_last_name"
+                class="form-control{% if form.last_name.errors %} is-invalid{% endif %}"
+                value="{{ form.last_name.value|default:'' }}"
+              >
+              {% if form.last_name.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.last_name.errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="id_password1" class="form-label fw-bold">Hasło</label>
+              <input
+                type="password"
+                name="password1"
+                id="id_password1"
+                class="form-control{% if form.password1.errors %} is-invalid{% endif %}"
+                autocomplete="new-password"
+                required
+              >
+              {% if form.password1.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.password1.errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <small class="text-muted d-block mt-1">{{ form.password1.help_text|safe }}</small>
+            </div>
+
+            <div class="mb-4">
+              <label for="id_password2" class="form-label fw-bold">Potwierdź hasło</label>
+              <input
+                type="password"
+                name="password2"
+                id="id_password2"
+                class="form-control{% if form.password2.errors %} is-invalid{% endif %}"
+                autocomplete="new-password"
+                required
+              >
+              {% if form.password2.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.password2.errors %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Zarejestruj się</button>
+          </form>
+
+          <div class="text-center mt-4">
+            <span class="text-muted">Masz już konto?</span>
+            <a href="{% url 'login' %}" class="text-decoration-none">Zaloguj się</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
