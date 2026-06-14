@@ -114,7 +114,7 @@
                                                 <div class="text-muted small">Waluta</div>
                                                 <div class="fw-bold">{{ summary.currency }}</div>
                                             </div>
-                                            <span class="badge bg-secondary">{{ summary.wallet_count }} portfeli</span>
+                                            <span class="badge bg-secondary">{{ summary.wallet_count }}  {% if summary.wallet_count == 1 %}portfel{% elif summary.wallet_count > 1 and summary.wallet_count < 5 %}portfele{% else %}portfeli{% endif %}</span>
                                         </div>
                                         <div class="fs-5 fw-bold {% if summary.balance >= 0 %}text-success{% else %}text-danger{% endif %}">
                                             {{ summary.balance }} {{ summary.currency }}
