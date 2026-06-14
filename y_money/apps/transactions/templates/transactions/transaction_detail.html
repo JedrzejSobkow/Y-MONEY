@@ -89,6 +89,9 @@
                 Odbiorca:
                 {% if transaction.recipient_friend %}
                   <strong>{{ transaction.recipient_friend.user.get_full_name|default:transaction.recipient_friend.user.username }}</strong>
+                  {% if transaction.display_recipient_wallet_name %}
+                    ({{ transaction.display_recipient_wallet_name }})
+                  {% endif %}
                 {% else %}
                   -
                 {% endif %}
