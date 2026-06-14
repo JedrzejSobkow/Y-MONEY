@@ -317,7 +317,14 @@ class TransactionDetailView(LoginRequiredMixin, View):
             transaction_obj.recipient_wallet.name
             if recipient_wallet_is_ours else None
         )
-
+        
+        transaction_obj.display_amount = transaction_obj.amount if transaction_obj.wallet.id == wallet_id else -transaction_obj.amount
+        transaction_obj.display_amount = '+' + str(transaction_obj.display_amount) if transaction_obj.display_amount > 0 else str(transaction_obj.display_amount)
+        
+        for item in transaction_obj.items.all():
+            item.display_amount = item.amount if transaction_obj.wallet.id == wallet_id else -item.amount
+            item.display_amount = '+' + str(item.display_amount) if item.display_amount > 0 else str(item.display_amount)
+            
         return render(
             request,
             "transactions/transaction_detail.html",
