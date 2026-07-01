@@ -50,11 +50,15 @@ Open `.env` and adjust:
 POSTGRES_DB=y_money_db
 POSTGRES_USER=y_money_user
 POSTGRES_PASSWORD=your_password
+POSTGRES_HOST=y-money-db
 
 # Django
 DJANGO_SECRET_KEY=generate_a_random_key_at_least_50_chars
 DEBUG=False
 ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Redis
+REDIS_HOST=y-money-redis
 
 # Nginx ports (optional)
 NGINX_PORT=80
@@ -133,7 +137,6 @@ Y-MONEY/
 +-- .github/
 |   \-- workflows/            # CI/CD configuration (GitHub Actions)
 |
-+-- nginx.conf                # Reverse proxy configuration
 +-- docker-compose.yml        # Service orchestration
 +-- .env.example              # Environment variable template
 \-- README.md
@@ -147,13 +150,13 @@ Y-MONEY/
 Browser
      |
      v
-  Nginx :80/:443          <- reverse proxy, serves static files
+  Nginx Proxy Manager :80/:443  <- main reverse proxy (handles routing & SSL)
      |
      v
-  Django / uvicorn :8000  <- application logic (3 ASGI workers)
+  Django / uvicorn :8000        <- application logic (3 ASGI workers)
      |           |
      v           v
-PostgreSQL      Redis     <- database / cache & sessions
+PostgreSQL      Redis           <- database / cache & sessions
 ```
 
 All services communicate over an isolated Docker network (`y_money_network`). Data is persisted in named volumes (`db_data`, `redis_data`, `static_volume`).
