@@ -22,4 +22,11 @@ jobs:
             git pull
             docker compose down
             docker compose up -d --build
-            docker exec y-money-app python manage.py migrate
+            sleep 10
+            if docker ps | grep -q y-money-app; then
+              echo "✅ Y-Money deployed successfully!"
+            else
+              echo "❌ Y-Money deployment failed!"
+              docker logs y-money-app --tail=20
+              exit 1
+            fi
