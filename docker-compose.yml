@@ -12,6 +12,7 @@ services:
       - app
     networks:
       - y_money_network
+      - npm-network
 
   app:
     build: ./y_money
@@ -65,6 +66,8 @@ services:
 networks:
   y_money_network:
     driver: bridge
+  npm-network:
+    external: true 
 
 volumes:
   db_data:
