@@ -1,6 +1,7 @@
 services:
   app:
     build: ./y_money
+    container_name: y-money-app
     restart: always
     entrypoint: >
       sh -c "python manage.py migrate --noinput &&
