@@ -17,6 +17,7 @@ services:
         condition: service_healthy
     networks:
       - y_money_network
+      - npm-network
 
   db:
     image: postgres:16
