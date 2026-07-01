@@ -18,7 +18,7 @@ services:
         condition: service_healthy
     networks:
       y_money_network:
-        ipv4_address: 172.20.0.10
+        ipv4_address: 172.21.0.10
       npm-network:
 
   db:
@@ -33,7 +33,7 @@ services:
       - db_data:/var/lib/postgresql/data
     networks:
       y_money_network:
-        ipv4_address: 172.20.0.20 
+        ipv4_address: 172.21.0.20 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
@@ -47,7 +47,7 @@ services:
       - redis_data:/data
     networks:
       y_money_network:
-        ipv4_address: 172.20.0.30 
+        ipv4_address: 172.21.0.30
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -59,8 +59,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1
+        - subnet: 172.21.0.0/24
+          gateway: 172.21.0.1
   npm-network:
     external: true
 
